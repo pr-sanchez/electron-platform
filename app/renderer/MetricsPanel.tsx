@@ -56,16 +56,23 @@ const MetricsPanel: React.FC<MetricsPanelProps> = ({
           </div>
 
           <div className="metric-item">
-            <div className="metric-label">Process Memory</div>
+            <div className="metric-label">Process Memory (Private)</div>
             <div className="metric-value">
-              {formatBytes(processMetrics.memory.workingSetSize)}
+              {formatBytes(processMetrics.memory.privateKB * 1024)}
             </div>
           </div>
 
           <div className="metric-item">
-            <div className="metric-label">Private Bytes</div>
+            <div className="metric-label">Resident Set</div>
             <div className="metric-value">
-              {formatBytes(processMetrics.memory.privateBytes)}
+              {formatBytes(processMetrics.memory.residentSetKB * 1024)}
+            </div>
+          </div>
+
+          <div className="metric-item">
+            <div className="metric-label">Shared Memory</div>
+            <div className="metric-value">
+              {formatBytes(processMetrics.memory.sharedKB * 1024)}
             </div>
           </div>
         </>

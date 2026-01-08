@@ -9,13 +9,17 @@ interface TopBarProps {
   onSearchChange: (query: string) => void;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ perfMetrics, searchQuery, onSearchChange }) => {
+const TopBar: React.FC<TopBarProps> = ({
+  perfMetrics,
+  searchQuery,
+  onSearchChange,
+}) => {
   const logger = useLogger();
   const [memoryLeakActive, setMemoryLeakActive] = useState(false);
 
   const handleSimulateCpuWork = (): void => {
     logger.info('simulate-cpu-work-clicked', {});
-    
+
     // Heavy computation to block main thread
     const start = performance.now();
     let result = 0;
@@ -23,16 +27,20 @@ const TopBar: React.FC<TopBarProps> = ({ perfMetrics, searchQuery, onSearchChang
       // Simulate CPU-intensive work
       result += Math.sqrt(Math.random() * 1000000);
     }
-    logger.info('simulate-cpu-work-completed', { duration: performance.now() - start });
+    logger.info('simulate-cpu-work-completed', {
+      duration: performance.now() - start,
+    });
   };
 
   const handleSimulateMemoryLeak = (): void => {
     const start = !memoryLeakActive;
     setMemoryLeakActive(start);
-    
+
     // Dispatch custom event for memory leak hook
-    window.dispatchEvent(new CustomEvent('memory-leak-toggle', { detail: { start } }));
-    
+    window.dispatchEvent(
+      new CustomEvent('memory-leak-toggle', { detail: { start } })
+    );
+
     if (window.electronAPI) {
       window.electronAPI.commands.simulateMemoryLeak(start);
     }
@@ -77,9 +85,11 @@ const TopBar: React.FC<TopBarProps> = ({ perfMetrics, searchQuery, onSearchChang
         className="search-input"
         placeholder="Search..."
         value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onSearchChange(e.target.value)
+        }
       />
-      
+
       <div className="health-widget">
         <div className={`health-indicator health-${healthStatus}`} />
         <span>Health: {healthStatus.toUpperCase()}</span>
@@ -88,18 +98,18 @@ const TopBar: React.FC<TopBarProps> = ({ perfMetrics, searchQuery, onSearchChang
       <button className="btn btn-warning" onClick={handleSimulateCpuWork}>
         Simulate CPU Work
       </button>
-      
+
       <button
         className={`btn ${memoryLeakActive ? 'btn-danger' : 'btn-secondary'}`}
         onClick={handleSimulateMemoryLeak}
       >
         {memoryLeakActive ? 'Stop Memory Leak' : 'Simulate Memory Leak'}
       </button>
-      
+
       <button className="btn btn-danger" onClick={handleTriggerError}>
         Trigger Error
       </button>
-      
+
       <button className="btn btn-secondary" onClick={handleOpenLogsFolder}>
         Open Logs Folder
       </button>

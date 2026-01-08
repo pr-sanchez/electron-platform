@@ -1,5 +1,4 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { useLogger } from './hooks/useLogger';
 
 interface Props {
   children: ReactNode;

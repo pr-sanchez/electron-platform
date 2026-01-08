@@ -9,7 +9,6 @@
 
 import { app, BrowserWindow, ipcMain, shell, crashReporter } from 'electron';
 import * as path from 'path';
-import * as fs from 'fs';
 import type { AppInfo, ProcessMetrics, LogLevel } from '../shared/ipc-types';
 import { createLogEntry } from '../shared/logger';
 import { MainLogger } from './logger';
@@ -41,7 +40,7 @@ function createWindow(): void {
       nodeIntegration: false, // Renderer cannot access Node.js APIs
       preload: isDev
         ? path.join(__dirname, '../preload/index.js')
-        : path.join(__dirname, 'preload/index.js'),
+        : path.join(__dirname, '../preload/index.js'),
       // Additional security headers
       webSecurity: true,
     },
@@ -53,7 +52,8 @@ function createWindow(): void {
     mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(path.join(__dirname, 'renderer/index.html'));
+    // In production, renderer is at ../renderer/index.html relative to main
+    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
   }
 
   // Handle window closed
@@ -89,12 +89,12 @@ function createWindow(): void {
 function startMetricsSampling(): void {
   if (metricsInterval) return;
 
-  metricsInterval = setInterval(() => {
+  metricsInterval = setInterval(async () => {
     if (!mainWindow) return;
 
     try {
       const cpuUsage = process.getCPUUsage();
-      const memoryInfo = process.getProcessMemoryInfo();
+      const memoryInfo = await process.getProcessMemoryInfo();
 
       const metrics: ProcessMetrics = {
         cpuUsage: {
@@ -102,9 +102,9 @@ function startMetricsSampling(): void {
           idleWakeupsPerSecond: cpuUsage.idleWakeupsPerSecond,
         },
         memory: {
-          workingSetSize: memoryInfo.workingSetSize,
-          peakWorkingSetSize: memoryInfo.peakWorkingSetSize,
-          privateBytes: memoryInfo.privateBytes,
+          privateKB: memoryInfo.private,
+          residentSetKB: memoryInfo.residentSet,
+          sharedKB: memoryInfo.shared,
         },
         timestamp: Date.now(),
       };
@@ -120,16 +120,6 @@ function stopMetricsSampling(): void {
   if (metricsInterval) {
     clearInterval(metricsInterval);
     metricsInterval = null;
-  }
-}
-
-/**
- * Safe window reload command
- */
-function reloadWindow(): void {
-  if (mainWindow) {
-    mainWindow.reload();
-    logger.info('window-reloaded', {});
   }
 }
 

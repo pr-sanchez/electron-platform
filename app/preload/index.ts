@@ -1,18 +1,13 @@
 /**
  * Preload script - bridges IPC communication between renderer and main
- * 
+ *
  * Security: This script runs in an isolated context with access to Node.js APIs.
  * It exposes a minimal, typed API to the renderer via contextBridge.
  * The renderer cannot access Node.js APIs directly.
  */
 
 import { contextBridge, ipcRenderer } from 'electron';
-import type {
-  AppInfo,
-  ProcessMetrics,
-  LogLevel,
-  IPCChannels,
-} from '../shared/ipc-types';
+import type { AppInfo, ProcessMetrics, LogLevel } from '../shared/ipc-types';
 
 /**
  * Typed IPC API exposed to renderer

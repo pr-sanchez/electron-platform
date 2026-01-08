@@ -5,9 +5,11 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "outDir": "./dist/preload",
-    "rootDir": "./app/preload",
+    "rootDir": "./app",
     "noEmit": false,
-    "types": ["node"]
+    "types": ["node"],
+    // Override inherited renderer-only option; emitting files is required here.
+    "allowImportingTsExtensions": false
   },
   "include": ["app/preload/**/*", "app/shared/**/*"],
   "exclude": ["node_modules", "dist"]

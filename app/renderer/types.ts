@@ -11,9 +11,9 @@ export interface ProcessMetrics {
     idleWakeupsPerSecond: number;
   };
   memory: {
-    workingSetSize: number;
-    peakWorkingSetSize: number;
-    privateBytes: number;
+    privateKB: number;
+    residentSetKB: number;
+    sharedKB: number;
   };
   timestamp: number;
 }

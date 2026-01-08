@@ -4,10 +4,12 @@
     "target": "ES2020",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "outDir": "./dist/main",
-    "rootDir": "./app/main",
+    "outDir": "./dist",
+    "rootDir": "./app",
     "noEmit": false,
-    "types": ["node"]
+    "types": ["node"],
+    // Override inherited renderer-only option; emitting files is required here.
+    "allowImportingTsExtensions": false
   },
   "include": ["app/main/**/*", "app/shared/**/*"],
   "exclude": ["node_modules", "dist"]

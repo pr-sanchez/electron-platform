@@ -9,12 +9,14 @@
     "package.json"
   ],
   "win": {
-    "target": "nsis"
+    "target": "nsis",
+    "sign": null
   },
   "mac": {
     "target": "dmg"
   },
   "linux": {
     "target": "AppImage"
-  }
+  },
+  "buildVersion": "1.0.0"
 }

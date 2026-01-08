@@ -5,6 +5,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   root: 'app/renderer',
+  base: './', // Use relative paths for assets in production
   build: {
     outDir: '../../dist/renderer',
     emptyOutDir: true,
