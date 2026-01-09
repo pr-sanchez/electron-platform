@@ -118,12 +118,16 @@ export function usePerformanceMetrics(): PerformanceMetrics {
           memoryLeakDataRef.current.push(data);
           setMemoryAllocations(memoryLeakDataRef.current.length);
         }, 100);
-        
+
         // Store interval ID to clear later
-        (window as unknown as { memoryLeakInterval?: NodeJS.Timeout }).memoryLeakInterval = interval;
+        (
+          window as unknown as { memoryLeakInterval?: NodeJS.Timeout }
+        ).memoryLeakInterval = interval;
       } else {
         // Stop and clear
-        const interval = (window as unknown as { memoryLeakInterval?: NodeJS.Timeout }).memoryLeakInterval;
+        const interval = (
+          window as unknown as { memoryLeakInterval?: NodeJS.Timeout }
+        ).memoryLeakInterval;
         if (interval) {
           clearInterval(interval);
           memoryLeakDataRef.current = [];
@@ -137,7 +141,9 @@ export function usePerformanceMetrics(): PerformanceMetrics {
     return () => {
       window.removeEventListener('memory-leak-toggle', handleMemoryLeak);
       // Cleanup on unmount
-      const interval = (window as unknown as { memoryLeakInterval?: NodeJS.Timeout }).memoryLeakInterval;
+      const interval = (
+        window as unknown as { memoryLeakInterval?: NodeJS.Timeout }
+      ).memoryLeakInterval;
       if (interval) {
         clearInterval(interval);
       }

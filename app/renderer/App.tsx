@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import InboxView from './InboxView';
 import TopBar from './TopBar';
