@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useLogger } from './hooks/useLogger';
+import { ThemeContext } from './contexts/ThemeContext';
 import type { PerformanceMetrics, ProcessMetrics } from './types';
 
 interface TopBarProps {
@@ -17,14 +18,13 @@ const ErrorThrower: React.FC<{ shouldThrow: boolean }> = ({ shouldThrow }) => {
   return null;
 };
 
-const TopBar: React.FC<TopBarProps> = ({
-  perfMetrics,
-  searchQuery,
-  onSearchChange,
-}) => {
+const TopBar: React.FC<TopBarProps> = ({ searchQuery, onSearchChange }) => {
   const logger = useLogger();
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const [memoryLeakActive, setMemoryLeakActive] = useState(false);
   const [shouldThrowError, setShouldThrowError] = useState(false);
+
+  document.documentElement.setAttribute('data-theme', theme);
 
   const handleSimulateMemoryLeak = (): void => {
     const start = !memoryLeakActive;
@@ -72,6 +72,15 @@ const TopBar: React.FC<TopBarProps> = ({
 
       <button className="btn btn-danger" onClick={handleTriggerError}>
         Trigger Error
+      </button>
+
+      <button
+        className="btn btn-secondary theme-toggle"
+        onClick={toggleTheme}
+        title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+      >
+        {theme === 'light' ? '🌙' : '☀️'}
       </button>
     </div>
   );

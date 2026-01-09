@@ -4,12 +4,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, #87ceeb 0%, #1e40af 100%);
+  background: linear-gradient(to bottom, var(--bg-gradient-start, #87ceeb) 0%, var(--bg-gradient-end, #1e40af) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
   animation: fadeIn 0.3s ease-in;
+  transition: background 0.3s ease;
 }
 
 @keyframes fadeIn {
