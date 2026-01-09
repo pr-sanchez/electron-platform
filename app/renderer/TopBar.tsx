@@ -9,6 +9,14 @@ interface TopBarProps {
   onSearchChange: (query: string) => void;
 }
 
+// Component that throws an error during render when shouldThrow is true
+const ErrorThrower: React.FC<{ shouldThrow: boolean }> = ({ shouldThrow }) => {
+  if (shouldThrow) {
+    throw new Error('Simulated error triggered from UI');
+  }
+  return null;
+};
+
 const TopBar: React.FC<TopBarProps> = ({
   perfMetrics,
   searchQuery,
@@ -16,21 +24,7 @@ const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const logger = useLogger();
   const [memoryLeakActive, setMemoryLeakActive] = useState(false);
-
-  const handleSimulateCpuWork = (): void => {
-    logger.info('simulate-cpu-work-clicked', {});
-
-    // Heavy computation to block main thread
-    const start = performance.now();
-    let result = 0;
-    while (performance.now() - start < 1000) {
-      // Simulate CPU-intensive work
-      result += Math.sqrt(Math.random() * 1000000);
-    }
-    logger.info('simulate-cpu-work-completed', {
-      duration: performance.now() - start,
-    });
-  };
+  const [shouldThrowError, setShouldThrowError] = useState(false);
 
   const handleSimulateMemoryLeak = (): void => {
     const start = !memoryLeakActive;
@@ -52,52 +46,22 @@ const TopBar: React.FC<TopBarProps> = ({
     if (window.electronAPI) {
       window.electronAPI.commands.triggerError();
     }
-    // Throw an error to test error boundary (use setTimeout to avoid breaking React render)
-    setTimeout(() => {
-      throw new Error('Simulated error triggered from UI');
-    }, 0);
+    // Trigger an error during render by setting state
+    setShouldThrowError(true);
   };
-
-  const handleOpenLogsFolder = (): void => {
-    if (window.electronAPI) {
-      window.electronAPI.commands.openLogsFolder();
-    }
-    logger.info('open-logs-folder-clicked', {});
-  };
-
-  // Calculate health status
-  const getHealthStatus = (): 'ok' | 'warn' | 'error' => {
-    if (perfMetrics.longTasks > 5 || perfMetrics.fps < 30) {
-      return 'error';
-    }
-    if (perfMetrics.longTasks > 2 || perfMetrics.fps < 50) {
-      return 'warn';
-    }
-    return 'ok';
-  };
-
-  const healthStatus = getHealthStatus();
 
   return (
     <div className="top-bar">
+      <ErrorThrower shouldThrow={shouldThrowError} />
       <input
         type="text"
         className="search-input"
-        placeholder="Search..."
+        placeholder="Search inbox items..."
         value={searchQuery}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           onSearchChange(e.target.value)
         }
       />
-
-      <div className="health-widget">
-        <div className={`health-indicator health-${healthStatus}`} />
-        <span>Health: {healthStatus.toUpperCase()}</span>
-      </div>
-
-      <button className="btn btn-warning" onClick={handleSimulateCpuWork}>
-        Simulate CPU Work
-      </button>
 
       <button
         className={`btn ${memoryLeakActive ? 'btn-danger' : 'btn-secondary'}`}
@@ -108,10 +72,6 @@ const TopBar: React.FC<TopBarProps> = ({
 
       <button className="btn btn-danger" onClick={handleTriggerError}>
         Trigger Error
-      </button>
-
-      <button className="btn btn-secondary" onClick={handleOpenLogsFolder}>
-        Open Logs Folder
       </button>
     </div>
   );

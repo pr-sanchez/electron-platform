@@ -1,13 +1,13 @@
 /**
  * Electron main process entry point
- * 
+ *
  * Security defaults:
  * - contextIsolation: true (isolates preload from renderer)
  * - sandbox: true (when possible, restricts renderer capabilities)
  * - nodeIntegration: false (renderer cannot access Node.js APIs directly)
  */
 
-import { app, BrowserWindow, ipcMain, shell, crashReporter } from 'electron';
+import { app, BrowserWindow, ipcMain, crashReporter } from 'electron';
 import * as path from 'path';
 import type { AppInfo, ProcessMetrics, LogLevel } from '../shared/ipc-types';
 import { createLogEntry } from '../shared/logger';
@@ -29,7 +29,7 @@ let metricsInterval: NodeJS.Timeout | null = null;
  */
 function createWindow(): void {
   const isDev = process.env.NODE_ENV === 'development';
-  
+
   mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
@@ -155,32 +155,39 @@ ipcMain.handle('metrics:off', () => {
 /**
  * Log entry from renderer (validated and forwarded to main logger)
  */
-ipcMain.handle('log:write', (_event, data: { level: LogLevel; event: string; payload?: unknown }) => {
-  // Basic validation
-  if (!data || typeof data.level !== 'string' || typeof data.event !== 'string') {
-    logger.warn('invalid-log-entry', { data });
-    return;
+ipcMain.handle(
+  'log:write',
+  (_event, data: { level: LogLevel; event: string; payload?: unknown }) => {
+    // Basic validation
+    if (
+      !data ||
+      typeof data.level !== 'string' ||
+      typeof data.event !== 'string'
+    ) {
+      logger.warn('invalid-log-entry', { data });
+      return;
+    }
+
+    const entry = createLogEntry(
+      data.level,
+      'renderer',
+      data.event,
+      data.payload
+    );
+    logger.writeEntry(entry);
   }
-
-  const entry = createLogEntry(data.level, 'renderer', data.event, data.payload);
-  logger.writeEntry(entry);
-});
-
-/**
- * Simulate CPU work (no-op in main, handled in renderer)
- */
-ipcMain.handle('command:simulate-cpu-work', () => {
-  logger.info('command-simulate-cpu-work', {});
-  // CPU work simulation happens in renderer
-});
+);
 
 /**
  * Simulate memory leak (no-op in main, handled in renderer)
  */
-ipcMain.handle('command:simulate-memory-leak', (_event, data: { start: boolean }) => {
-  logger.info('command-simulate-memory-leak', { start: data?.start });
-  // Memory leak simulation happens in renderer
-});
+ipcMain.handle(
+  'command:simulate-memory-leak',
+  (_event, data: { start: boolean }) => {
+    logger.info('command-simulate-memory-leak', { start: data?.start });
+    // Memory leak simulation happens in renderer
+  }
+);
 
 /**
  * Trigger error (no-op in main, handled in renderer)
@@ -188,19 +195,6 @@ ipcMain.handle('command:simulate-memory-leak', (_event, data: { start: boolean }
 ipcMain.handle('command:trigger-error', () => {
   logger.info('command-trigger-error', {});
   // Error simulation happens in renderer
-});
-
-/**
- * Open logs folder in system file manager
- */
-ipcMain.handle('command:open-logs-folder', async () => {
-  try {
-    const logsPath = logger.getLogsDirectory();
-    await shell.openPath(logsPath);
-    logger.info('logs-folder-opened', { path: logsPath });
-  } catch (error) {
-    logger.error('open-logs-folder-error', { error: String(error) });
-  }
 });
 
 // App lifecycle
@@ -229,7 +223,10 @@ app.on('before-quit', () => {
 
 // Global error handlers
 process.on('uncaughtException', (error) => {
-  logger.error('uncaught-exception', { error: error.message, stack: error.stack });
+  logger.error('uncaught-exception', {
+    error: error.message,
+    stack: error.stack,
+  });
 });
 
 process.on('unhandledRejection', (reason) => {

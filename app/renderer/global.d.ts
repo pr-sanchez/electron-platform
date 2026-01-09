@@ -11,10 +11,8 @@ declare global {
       onMetrics(callback: (metrics: ProcessMetrics) => void): () => void;
       log(level: LogLevel, event: string, payload?: unknown): void;
       commands: {
-        simulateCpuWork(): void;
         simulateMemoryLeak(start: boolean): void;
         triggerError(): void;
-        openLogsFolder(): void;
       };
     };
   }

@@ -44,10 +44,8 @@ export interface IPCChannels {
   'log:write': { request: { level: LogLevel; event: string; payload?: unknown }; response: void };
   
   // Commands
-  'command:simulate-cpu-work': { request: void; response: void };
   'command:simulate-memory-leak': { request: { start: boolean }; response: void };
   'command:trigger-error': { request: void; response: void };
-  'command:open-logs-folder': { request: void; response: void };
 }
 
 // Type helpers for IPC

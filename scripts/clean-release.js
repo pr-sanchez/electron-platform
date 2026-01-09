@@ -21,9 +21,9 @@ if (fs.existsSync(releaseDir)) {
       } catch (error) {
         retries--;
         if (retries === 0) {
-          console.warn('⚠️  Could not clean release directory (files may be locked)');
-          console.warn('   This is usually fine - electron-builder will overwrite files.');
-          console.warn('   If packaging fails, close any running app instances and try again.');
+          console.warn('Could not clean release directory (files may be locked)');
+          console.warn('This is usually fine - electron-builder will overwrite files.');
+          console.warn('If packaging fails, close any running app instances and try again.');
           // Exit successfully - let electron-builder handle it
           process.exit(0);
         }
@@ -36,8 +36,8 @@ if (fs.existsSync(releaseDir)) {
       }
     }
   } catch (error) {
-    console.warn('⚠️  Error cleaning release directory:', error.message);
-    console.warn('   Continuing anyway - electron-builder will handle overwriting files.');
+    console.warn('Error cleaning release directory:', error.message);
+    console.warn('Continuing anyway - electron-builder will handle overwriting files.');
     process.exit(0);
   }
 } else {

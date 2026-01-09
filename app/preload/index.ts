@@ -51,17 +51,11 @@ const electronAPI = {
    * Commands
    */
   commands: {
-    simulateCpuWork: (): void => {
-      ipcRenderer.invoke('command:simulate-cpu-work');
-    },
     simulateMemoryLeak: (start: boolean): void => {
       ipcRenderer.invoke('command:simulate-memory-leak', { start });
     },
     triggerError: (): void => {
       ipcRenderer.invoke('command:trigger-error');
-    },
-    openLogsFolder: (): void => {
-      ipcRenderer.invoke('command:open-logs-folder');
     },
   },
 };
