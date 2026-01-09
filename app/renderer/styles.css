@@ -193,12 +193,13 @@ body {
 }
 
 .theme-toggle {
-  min-width: 44px;
+  width: 44px;
   padding: 10px;
   font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: auto;
 }
 
 .health-widget {
