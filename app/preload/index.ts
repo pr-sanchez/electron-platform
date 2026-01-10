@@ -70,3 +70,5 @@ declare global {
     electronAPI: typeof electronAPI;
   }
 }
+
+export type ElectronAPI = typeof electronAPI;

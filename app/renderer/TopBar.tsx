@@ -3,11 +3,15 @@ import { useLogger } from './hooks/useLogger';
 import { ThemeContext } from './contexts/ThemeContext';
 import type { PerformanceMetrics, ProcessMetrics } from './types';
 
+type TabType = 'inbox' | 'voice';
+
 interface TopBarProps {
   perfMetrics: PerformanceMetrics;
   processMetrics: ProcessMetrics | null;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  activeTab: TabType;
+  onTabChange: (tab: TabType) => void;
 }
 
 // Component that throws an error during render when shouldThrow is true
@@ -18,7 +22,7 @@ const ErrorThrower: React.FC<{ shouldThrow: boolean }> = ({ shouldThrow }) => {
   return null;
 };
 
-const TopBar: React.FC<TopBarProps> = ({ searchQuery, onSearchChange }) => {
+const TopBar: React.FC<TopBarProps> = ({ searchQuery, onSearchChange, activeTab, onTabChange }) => {
   const logger = useLogger();
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [memoryLeakActive, setMemoryLeakActive] = useState(false);
@@ -53,15 +57,31 @@ const TopBar: React.FC<TopBarProps> = ({ searchQuery, onSearchChange }) => {
   return (
     <div className="top-bar">
       <ErrorThrower shouldThrow={shouldThrowError} />
-      <input
-        type="text"
-        className="search-input"
-        placeholder="Search inbox items..."
-        value={searchQuery}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          onSearchChange(e.target.value)
-        }
-      />
+      <div className="tabs">
+        <button
+          className={`tab ${activeTab === 'inbox' ? 'active' : ''}`}
+          onClick={() => onTabChange('inbox')}
+        >
+          Inbox
+        </button>
+        <button
+          className={`tab ${activeTab === 'voice' ? 'active' : ''}`}
+          onClick={() => onTabChange('voice')}
+        >
+          🎤 Voice Recording
+        </button>
+      </div>
+      {activeTab === 'inbox' && (
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search inbox items..."
+          value={searchQuery}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onSearchChange(e.target.value)
+          }
+        />
+      )}
 
       <button
         className={`btn ${memoryLeakActive ? 'btn-danger' : 'btn-secondary'}`}

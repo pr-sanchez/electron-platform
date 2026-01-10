@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import InboxView from './InboxView';
+import VoiceRecordingView from './VoiceRecordingView';
 import TopBar from './TopBar';
 import MetricsPanel from './MetricsPanel';
 import Loader from './Loader';
@@ -9,12 +10,15 @@ import { usePerformanceMetrics } from './hooks/usePerformanceMetrics';
 import { useProcessMetrics } from './hooks/useProcessMetrics';
 import { useLogger } from './hooks/useLogger';
 
+type TabType = 'inbox' | 'voice';
+
 function App() {
   const logger = useLogger();
   const perfMetrics = usePerformanceMetrics();
   const processMetrics = useProcessMetrics();
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<TabType>('inbox');
 
   useEffect(() => {
     logger.info('app-mounted', {});
@@ -45,8 +49,14 @@ function App() {
               processMetrics={processMetrics}
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
             />
-            <InboxView searchQuery={searchQuery} />
+            {activeTab === 'inbox' ? (
+              <InboxView searchQuery={searchQuery} />
+            ) : (
+              <VoiceRecordingView />
+            )}
             <MetricsPanel
               perfMetrics={perfMetrics}
               processMetrics={processMetrics}

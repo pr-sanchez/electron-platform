@@ -534,3 +534,388 @@ body {
   );
   transition: background 0.3s ease;
 }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-right: 16px;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: var(--text-inverse);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.tab.active {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme='dark'] .tab {
+  background: rgba(148, 163, 184, 0.2);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+[data-theme='dark'] .tab:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+[data-theme='dark'] .tab.active {
+  background: rgba(148, 163, 184, 0.35);
+  border-color: rgba(148, 163, 184, 0.5);
+}
+
+/* Voice Recording View */
+.voice-recording-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-panel);
+  backdrop-filter: blur(10px);
+  transition: background 0.3s ease;
+}
+
+.recording-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 32px;
+  min-height: 400px;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-primary),
+    var(--bg-secondary)
+  );
+}
+
+.microphone-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.microphone-button {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px var(--shadow);
+  position: relative;
+  overflow: visible;
+}
+
+.microphone-button::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.1;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+.microphone-button.recording::before {
+  animation: pulse-ring-recording 1s ease-out infinite;
+}
+
+.microphone-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px var(--shadow);
+}
+
+.microphone-button.recording {
+  background: #10b981;
+  color: white;
+  animation: pulse-recording 1.5s ease-in-out infinite;
+}
+
+.microphone-button svg {
+  width: 80px;
+  height: 80px;
+  z-index: 1;
+  position: relative;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-ring-recording {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-recording {
+  0%,
+  100% {
+    box-shadow: 0 8px 24px var(--shadow), 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  50% {
+    box-shadow: 0 8px 24px var(--shadow), 0 0 0 20px rgba(16, 185, 129, 0);
+  }
+}
+
+.audio-level-indicator {
+  width: 300px;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px var(--shadow);
+}
+
+.audio-level-bar {
+  height: 100%;
+  background: linear-gradient(to right, #10b981, #34d399, #6ee7b7);
+  border-radius: 4px;
+  transition: width 0.1s ease;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.waveform-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 32px 0 16px;
+  padding: 24px;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-secondary),
+    var(--bg-primary)
+  );
+  border-radius: 20px;
+  box-shadow: 0 6px 20px var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.waveform-error {
+  color: #ef4444;
+  font-size: 14px;
+  margin-bottom: 12px;
+  padding: 8px 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.recording-status {
+  margin-top: 16px;
+}
+
+.status-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.recording-text {
+  color: #10b981;
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.recordings-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-primary);
+}
+
+.recordings-header {
+  padding: 20px 24px;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-secondary),
+    var(--bg-primary)
+  );
+  border-bottom: 1px solid var(--border-color);
+}
+
+.recordings-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.recordings-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.recordings-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.recordings-container::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.recordings-container::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+  border-radius: 4px;
+}
+
+.recordings-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+.recordings-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-tertiary);
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.recording-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.recording-item:hover {
+  background: var(--bg-panel);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+.recording-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.recording-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  transition: color 0.3s ease;
+}
+
+.recording-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.recording-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.play-button,
+.delete-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.play-button:hover {
+  background: #10b981;
+  color: white;
+  transform: scale(1.1);
+}
+
+.play-button.playing {
+  background: #10b981;
+  color: white;
+  animation: pulse-button 1s ease-in-out infinite;
+}
+
+.delete-button:hover {
+  background: #ef4444;
+  color: white;
+  transform: scale(1.1);
+}
+
+@keyframes pulse-button {
+  0%,
+  100% {
+    box-shadow: 0 2px 4px var(--shadow);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
+  }
+}
