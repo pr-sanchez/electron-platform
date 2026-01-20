@@ -39,8 +39,8 @@ function createWindow(): void {
       sandbox: true, // Restricts renderer capabilities
       nodeIntegration: false, // Renderer cannot access Node.js APIs
       preload: isDev
-        ? path.join(__dirname, '../preload/index.js')
-        : path.join(__dirname, '../preload/index.js'),
+        ? path.join(__dirname, '../preload/preload/index.js')
+        : path.join(__dirname, '../preload/preload/index.js'),
       // Additional security headers
       webSecurity: true,
     },
