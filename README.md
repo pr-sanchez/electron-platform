@@ -2,6 +2,32 @@
 
 A production-shaped Electron desktop application demonstrating clean architecture, performance awareness, observability, and robust error handling.
 
+## Technology Stack
+
+### Core Technologies
+
+- **Electron** (v28.0.0) - Desktop application framework
+- **React** (v18.2.0) - UI framework for the renderer process
+- **TypeScript** (v5.3.3) - Programming language for type safety
+- **Vite** (v5.0.8) - Build tool and development server
+- **electron-builder** (v24.9.1) - Application packaging and distribution
+
+### Additional Tools & Libraries
+
+- **@vitejs/plugin-react** - Vite plugin for React support
+- **react-window** - Virtualized list rendering for performance
+- **ESLint** - Code linting with TypeScript and React plugins
+- **concurrently** - Run multiple development processes simultaneously
+
+### Architecture Components
+
+- **Main Process** - TypeScript (`app/main/`) - Node.js environment
+- **Renderer Process** - React + TypeScript (`app/renderer/`) - Browser environment
+- **Preload Scripts** - TypeScript (`app/preload/`) - IPC bridge
+- **Shared Code** - TypeScript (`app/shared/`) - Common types and utilities
+
+The application uses Vite for fast Hot Module Replacement (HMR) in development and optimized production builds.
+
 ## Features
 
 ### Architecture
